@@ -13,12 +13,21 @@ const host = env.APP_URL;
     const p = router.path;
     const c = new router.controller();
     const m = router.method;
+    const rm = router.routeMethod;
 
-    app.get(p, async (req: Request, res: Response) => {
-      const r = await c[m](req, res);
+    app[rm](p, async (req: Request, res: Response, next) => {
+      try {
+        const cb = await c[m]({
+          req,
+          res,
+        });
 
-      if (r != null) {
-        res.send();
+        if (cb != null) {
+          res.setHeader("Content-Type", "application/json");
+          res.end(JSON.stringify(cb));
+        }
+      } catch (err) {
+        next(new Error(err));
       }
     });
   }

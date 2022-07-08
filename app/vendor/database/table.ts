@@ -15,7 +15,7 @@ class PrivateMethod {
 class Table {
   id(column: string = "id") {
     col = column;
-    params.push(`${col} BIGINT NOT NULL`);
+    params.push(`${col} BIGINT NOT NULL AUTO_INCREMENT`);
     params.push(`PRIMARY KEY (${col})`);
   }
 

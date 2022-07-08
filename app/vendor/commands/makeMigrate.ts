@@ -1,7 +1,10 @@
-import Model from "../../models/model";
+import Model from "../model";
 import yargs from "yargs";
 import fs from "fs";
 import { params } from "../database/table";
+import dotenv from "dotenv";
+dotenv.config();
+const env = process.env;
 
 export default yargs.command({
   command: "migrate",
@@ -15,21 +18,22 @@ export default yargs.command({
     },
   },
   async handler(argv) {
-    const model = new Model().connect();
     const migrations = await fs.promises.readdir("app/migrations");
+    const pdo =
+      require(`../../vendor/database/connections/${env.DB_CONNECTION}.ts`).default;
+    const db = new pdo();
 
     for await (const migrate of migrations) {
       const m1 = require(`../../migrations/${migrate}`);
       if (!argv.rollback) {
         const m2 = m1.up();
-        await model.execute(`CREATE TABLE ${m2.name} (${params.join(",")})`);
+        await db.query(`CREATE TABLE ${m2.name} (${params.join(",")})`);
       } else {
         const m2 = m1.down();
-        await model.execute(`DROP TABLE ${m2.name}`);
+        await db.query(`DROP TABLE ${m2.name}`);
       }
     }
 
-    model.disconnect();
     console.log("Migrations successfully");
   },
 });

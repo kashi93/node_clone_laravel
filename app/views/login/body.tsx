@@ -16,7 +16,7 @@ export default function body() {
                     <div className="text-center">
                       <h1 className="h4 text-gray-900 mb-4">Welcome Back!</h1>
                     </div>
-                    <form className="user">
+                    <form action="/login" method="post" className="user">
                       <div className="form-group">
                         <input
                           type="email"
@@ -24,6 +24,7 @@ export default function body() {
                           id="exampleInputEmail"
                           aria-describedby="emailHelp"
                           placeholder="Enter Email Address..."
+                          name="email"
                         />
                       </div>
                       <div className="form-group">
@@ -32,6 +33,7 @@ export default function body() {
                           className="form-control form-control-user"
                           id="exampleInputPassword"
                           placeholder="Password"
+                          name="password"
                         />
                       </div>
                       <div className="form-group">
@@ -49,35 +51,21 @@ export default function body() {
                           </label>
                         </div>
                       </div>
-                      <a
-                        href="index.html"
+                      <button
+                        type="submit"
                         className="btn btn-primary btn-user btn-block"
                       >
                         Login
-                      </a>
+                      </button>
                       <hr />
-                      <a
-                        href="index.html"
-                        className="btn btn-google btn-user btn-block"
-                      >
-                        <i className="fab fa-google fa-fw" /> Login with Google
-                      </a>
-                      <a
-                        href="index.html"
-                        className="btn btn-facebook btn-user btn-block"
-                      >
-                        <i className="fab fa-facebook-f fa-fw" /> Login with
-                        Facebook
-                      </a>
                     </form>
-                    <hr />
                     <div className="text-center">
                       <a className="small" href="forgot-password.html">
                         Forgot Password?
                       </a>
                     </div>
                     <div className="text-center">
-                      <a className="small" href="register.html">
+                      <a className="small" href="/register">
                         Create an Account!
                       </a>
                     </div>

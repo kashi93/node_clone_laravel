@@ -1,7 +1,9 @@
-import Model from "./model";
-
-export default class User extends Model {
-  all() {
-    return this.execute("SELECT * FROM `books`", []);
+import Model from "../vendor/model";
+class User extends Model {
+  constructor() {
+    super();
+    this.table = "users";
   }
 }
+
+export default new User();
