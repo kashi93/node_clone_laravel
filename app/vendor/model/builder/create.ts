@@ -1,12 +1,13 @@
 import dotenv from "dotenv";
 dotenv.config();
 const env = process.env;
+const is_dev = env.APP_ENV == "local";
 
-export default class Builder {
+export default class Create {
   table: string = "";
   useTimeStamps: boolean = true;
-  private created_at: any = null;
-  private updated_at: any = null;
+  private created_at?: any = null;
+  private updated_at?: any = null;
 
   create(params: { [column: string]: string | number | null }) {
     return new Promise(async (res, rej) => {
@@ -24,7 +25,7 @@ export default class Builder {
     });
   }
 
-  private async createTimeStamp(current_params: {
+  private async createTimeStamp?(current_params: {
     columns: Array<any>;
     data: Array<any>;
   }): Promise<{ columns: Array<any>; data: Array<any> }> {
@@ -50,7 +51,7 @@ export default class Builder {
     return current_params;
   }
 
-  private dateTime(d: any = null) {
+  private dateTime?(d: any = null) {
     let date;
 
     if (d != null) {
@@ -74,7 +75,7 @@ export default class Builder {
 
     return date;
   }
-  private async objToParam1(
+  private async objToParam1?(
     obj: any
   ): Promise<{ columns: Array<any>; data: Array<any> }> {
     const columns: Array<any> = [];
@@ -98,9 +99,10 @@ export default class Builder {
     };
   }
 
-  private async execute(query: string) {
-    const pdo =
-      require(`../database/connections/${env.DB_CONNECTION}.ts`).default;
+  private async execute?(query: string) {
+    const pdo = require(`../../database/connections/${env.DB_CONNECTION}.${
+      is_dev ? "ts" : "js"
+    }`).default;
     const db = new pdo();
     await db.query(query);
   }

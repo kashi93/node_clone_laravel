@@ -10,6 +10,7 @@ export const web: Array<Web> = [
     path: "/",
     controller: HomeContoller,
     method: "index",
+    middlewares: ["isLogin"],
   },
   {
     routeMethod: "get",

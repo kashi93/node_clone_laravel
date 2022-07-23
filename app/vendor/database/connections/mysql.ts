@@ -21,9 +21,14 @@ class mysql {
   }
 
   async query(query: string) {
-    const con = this.open();
-    await this.execute(con, query);
-    this.close(con);
+    try {
+      const con = this.open();
+      const r = await this.execute(con, query);
+      this.close(con);
+      return r;
+    } catch (error) {
+      throw new Error(error);
+    }
   }
 
   execute<T>(con: Connection, query: string): Promise<T> {
@@ -32,8 +37,11 @@ class mysql {
 
       return new Promise<T>((resolve, reject) => {
         con.query(query, [], (error, results) => {
-          if (error) reject(error);
-          else resolve(results);
+          if (error) {
+            reject(error);
+          } else {
+            resolve(results);
+          }
         });
       });
     } catch (error) {

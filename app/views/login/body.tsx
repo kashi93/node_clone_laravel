@@ -1,6 +1,10 @@
 import React from "react";
+import { method } from "./methods";
 
 export default function body() {
+  const { error } = method.parent;
+  const { email, setEmail, password, setPassword } = method.state();
+
   return (
     <div className="container">
       {/* Outer Row */}
@@ -19,13 +23,23 @@ export default function body() {
                     <form action="/login" method="post" className="user">
                       <div className="form-group">
                         <input
-                          type="email"
+                          type="text"
                           className="form-control form-control-user"
                           id="exampleInputEmail"
                           aria-describedby="emailHelp"
                           placeholder="Enter Email Address..."
                           name="email"
+                          value={email}
+                          onChange={(e) => setEmail(e.target.value)}
                         />
+
+                        {error.email != null ? (
+                          <small className="ml-3 mt-1">
+                            <b className="text-danger">{error.email.msg}</b>
+                          </small>
+                        ) : (
+                          ""
+                        )}
                       </div>
                       <div className="form-group">
                         <input
@@ -35,6 +49,13 @@ export default function body() {
                           placeholder="Password"
                           name="password"
                         />
+                        {error.password != null ? (
+                          <small className="ml-3 mt-1">
+                            <b className="text-danger">{error.password.msg}</b>
+                          </small>
+                        ) : (
+                          ""
+                        )}
                       </div>
                       <div className="form-group">
                         <div className="custom-control custom-checkbox small">

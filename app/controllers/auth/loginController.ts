@@ -1,20 +1,34 @@
 import { Request, Response } from "express";
-import hash from "../../vendor/password/hash";
+import auth from "../../vendor/helpers/auth";
 import Controller from "../controller";
 
 export default class loginController extends Controller {
   async index({ req, res }: { req: Request; res: Response }): Promise<void> {
-    res.render("login/login");
+    const errorBag = await this.validatorToBag(req.session.errors);
+    res.render("login/login", {
+      error: errorBag,
+      request: req.session.request,
+    });
   }
 
   async login({ req, res }: { req: Request; res: Response }): Promise<any> {
-    // const password = await hash.make(req.body.password);
-    // return password;
-    // $2b$10$ib9savJky7NVM.Be2wWanO4oBldP9RJ3oE/vawrHRAL2TZ55Bi1R2;
-    // const v = await hash.verify(
-    //   "req.body.password",
-    //   "$2b$10$ib9savJky7NVM.Be2wWanO4oBldP9RJ3oE/vawrHRAL2TZ55Bi1R2"
-    // );
-    // return v;
+    const errorBag = await this.validatorToBag(req.session.errors);
+    const v = await this.validate(
+      {
+        req,
+      },
+      {
+        email: ["required", "email"],
+        password: ["required"],
+      }
+    );
+    if (v.errors.length > 0) {
+      req.session.request = req.body;
+      req.session.errors = v.errors;
+      res.redirect("/login");
+    } else {
+      await auth.attempt(req, res);
+      res.redirect("/");
+    }
   }
 }

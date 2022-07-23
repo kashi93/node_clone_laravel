@@ -1,4 +1,4 @@
-import express, { Express, Request, Response } from "express";
+import express, { Express, NextFunction, Request, Response } from "express";
 import dotenv from "dotenv";
 import { web as routes } from "./web";
 dotenv.config();
@@ -14,8 +14,9 @@ const host = env.APP_URL;
     const c = new router.controller();
     const m = router.method;
     const rm = router.routeMethod;
+    const middlewares = router.middlewares || [];
 
-    app[rm](p, async (req: Request, res: Response, next) => {
+    app[rm](p, async (req: Request, res: Response, next: NextFunction) => {
       try {
         const cb = await c[m]({
           req,
